@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.github.sats17</groupId>
-	<artifactId>starter</artifactId>
+	<artifactId>spring-boot-ms-starter-monitor</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>rest-api-starter</name>
 	<description>Starter project for building quick microservice</description>

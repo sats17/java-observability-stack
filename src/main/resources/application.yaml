@@ -1,0 +1,8 @@
+server.port: 8081
+
+weather:
+    protocol: "https"
+    host: "api.open-meteo.com"
+    port: 443
+    forecastApiPath: "/v1/forecast"
+    timeOutInMillis: "5000"

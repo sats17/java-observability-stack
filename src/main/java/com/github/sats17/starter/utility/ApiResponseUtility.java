@@ -30,6 +30,20 @@ public class ApiResponseUtility {
 				   finalResponse, HttpStatus.OK);
 		return successResponse;
 	}
+	
+	@SuppressWarnings("rawtypes")
+	public static ResponseEntity<FinalResponse> successResponseCreator(String body, String message) {
+		Status status = new Status();
+		status.setRootCode(20000);
+		status.setRootType("Success");
+	
+		FinalResponse<String> finalResponse = new FinalResponse<>();
+		finalResponse.setStatus(status);
+		finalResponse.setResponse(body);
+		ResponseEntity<FinalResponse> successResponse = new ResponseEntity<>(
+				   finalResponse, HttpStatus.OK);
+		return successResponse;
+	}
 
 	public static ResponseEntity<FinalResponse<List<SampleSuccess>>> successResponseCreator(List<SampleSuccess> test,
 			String message) {
@@ -51,13 +65,29 @@ public class ApiResponseUtility {
 		Status status = new Status();
 		status.setRootCode(40000);
 		status.setRootType("ValidationException");
-		status.setService("StarterAPI");
+		status.setService("MonitorAPI");
 	
 		FinalResponse finalResponse = new FinalResponse<>();
 		finalResponse.setStatus(status);
 		finalResponse.setError(errors);
 		ResponseEntity<FinalResponse> errorResponse = new ResponseEntity<>(
 				   finalResponse, HttpStatus.BAD_REQUEST);
+		return errorResponse;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static ResponseEntity<FinalResponse> serverErrorResponseCreator(List<Error> errors,
+			String message) {
+		Status status = new Status();
+		status.setRootCode(40000);
+		status.setRootType("ServerException");
+		status.setService("MonitorAPI");
+	
+		FinalResponse finalResponse = new FinalResponse<>();
+		finalResponse.setStatus(status);
+		finalResponse.setError(errors);
+		ResponseEntity<FinalResponse> errorResponse = new ResponseEntity<>(
+				   finalResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		return errorResponse;
 	}
 	
