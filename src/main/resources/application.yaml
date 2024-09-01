@@ -6,3 +6,10 @@ weather:
     port: 443
     forecastApiPath: "/v1/forecast"
     timeOutInMillis: "5000"
+
+logging:
+  level:
+     root: INFO
+     com.github: DEBUG
+  pattern:
+     console: "%d{ISO8601} %-5level %logger{36} - %msg%n"  # ISO8601 timestamp format

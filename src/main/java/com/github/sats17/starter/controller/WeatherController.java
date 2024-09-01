@@ -3,6 +3,8 @@ package com.github.sats17.starter.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,23 +12,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.sats17.starter.model.response.Error;
 import com.github.sats17.starter.model.response.FinalResponse;
-import com.github.sats17.starter.model.response.SampleSuccess;
 import com.github.sats17.starter.service.WeatherService;
 import com.github.sats17.starter.utility.ApiResponseUtility;
-import com.github.sats17.starter.model.response.Error;
 
 @RestController
 @RequestMapping("/api/weather")
 public class WeatherController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(WeatherController.class);
 
 	@Autowired
 	WeatherService weatherService;
 
 	@GetMapping("/forecast")
 	public ResponseEntity<FinalResponse> getForecast(@RequestParam("lat") String lat, @RequestParam("lon") String lon) {
-
-		return weatherService.getForecastByLatLon(lat, lon);
+		ResponseEntity<FinalResponse> resp = weatherService.getForecastByLatLon(lat, lon);
+		return resp;
 	}
 
 	/*
