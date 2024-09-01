@@ -8,9 +8,11 @@ receivers:
 
 processors:
   batch:
+    timeout: 5s
+    send_batch_size: 50
 
 exporters:
-  otlp:
+  otlphttp:
     endpoint: "http://logstash:5044"
     tls:
        insecure: true
@@ -20,12 +22,12 @@ service:
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp]
+      exporters: [otlphttp]
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp]
+      exporters: [otlphttp]
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp]
+      exporters: [otlphttp]
