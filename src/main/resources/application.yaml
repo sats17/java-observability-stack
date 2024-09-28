@@ -7,9 +7,27 @@ weather:
     forecastApiPath: "/v1/forecast"
     timeOutInMillis: "5000"
 
+otel:
+   service:
+      name: spring-boot-starter-monitor
+   exporter:
+      otlp:
+        endpoint: http://localhost:4317
+        protocol: grpc      
+        logs:
+          enabled: true
+        traces:
+          enabled: true
+        metrics:
+          enabled: true
+
+
+
 logging:
   level:
      root: INFO
      com.github: DEBUG
+     io:
+      opentelemetry: DEBUG
   pattern:
      console: "%d{ISO8601} %-5level %logger{36} - %msg%n"  # ISO8601 timestamp format

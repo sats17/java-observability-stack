@@ -14,22 +14,28 @@ services:
       - es_data:/usr/share/elasticsearch/data
     networks:
       - elastic
-
-  logstash:
-    image: docker.elastic.co/logstash/logstash:8.15.0
-    container_name: logstash
-    depends_on:
-      - elasticsearch
-    volumes:
-      - ./logstash-pipeline:/usr/share/logstash/pipeline
-    ports:
-      - "5044:5044"
-      - "9600:9600" # Logstash HTTP API
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    networks:
-      - elastic
-      - otel
+  # We do not need this incase using opentelemetry, as logstash expects json and otel send data in protobuf
+  #logstash:
+   # image: docker.elastic.co/logstash/logstash:8.15.0
+   # container_name: logstash
+   # depends_on:
+    #  - elasticsearch
+    #volumes:
+     # - ./logstash-pipeline:/usr/share/logstash/pipeline
+    #ports:
+     # - "5044:5044"
+      #- "9600:9600" # Logstash HTTP API
+    #environment:
+     # - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    #networks:
+     # - elastic
+      #- otel
+    #healthcheck:
+     # test: ["CMD-SHELL", "curl --fail http://localhost:9600/_node/stats || exit 1"]
+     # interval: 10s
+      #retries: 10
+      #start_period: 40s
+      #timeout: 5s
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.15.0
@@ -43,8 +49,24 @@ services:
     networks:
       - elastic
 
+  #otel-collector:
+   # image: otel/opentelemetry-collector:latest
+    #container_name: otel-collector
+    #volumes:
+     # - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    #ports:
+     # - "4317:4317" # OTLP gRPC
+      #- "4318:4318" # OTLP HTTP
+    #command: ["--config", "/etc/otel-collector-config.yaml"]
+    #networks:
+     # - otel
+    #depends_on:
+     # logstash:
+      #  condition: service_healthy
+      
   otel-collector:
-    image: otel/opentelemetry-collector:latest
+    # Custom OpenTelemetry Collector with Elasticsearch exporter support
+    image: otel/opentelemetry-collector-contrib:latest
     container_name: otel-collector
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
@@ -53,6 +75,7 @@ services:
       - "4318:4318" # OTLP HTTP
     command: ["--config", "/etc/otel-collector-config.yaml"]
     networks:
+      - elastic
       - otel
 
 volumes:
