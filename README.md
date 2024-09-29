@@ -38,3 +38,9 @@ This project demonstrates how to integrate OpenTelemetry with a Spring Boot appl
     ├── src
 
 ```
+
+## Prerequisites
+- Docker
+- Docker Compose
+- Java 11+
+- Maven (Optional)
