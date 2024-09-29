@@ -2,7 +2,7 @@ server.port: 8082
 
 weather:
     protocol: "http"
-    host: "localhost"
+    host: "${WEATHER_AGGREGATOR_HOST:localhost}"
     port: 8081
     forecastApiPath: "/api/weather"
     timeOutInMillis: "5000"
@@ -12,7 +12,7 @@ otel:
       name: weather-gateway-monitor
    exporter:
       otlp:
-        endpoint: http://localhost:4317
+        endpoint: ${OTEL_EXPORTER_GRPC_OTLP_ENDPOINT:http://localhost:4317}
         protocol: grpc      
         logs:
           enabled: true

@@ -20,7 +20,7 @@ otel:
       name: weather-aggregator-monitor
    exporter:
       otlp:
-        endpoint: http://localhost:4317
+        endpoint: ${OTEL_EXPORTER_GRPC_OTLP_ENDPOINT:http://localhost:4317}
         protocol: grpc      
         logs:
           enabled: true

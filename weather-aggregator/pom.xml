@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.github.sats17</groupId>
 	<artifactId>weather-aggregator</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>rest-api-starter</name>
 	<description>Weather aggregator service</description>
 	<properties>

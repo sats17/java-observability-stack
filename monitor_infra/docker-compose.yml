@@ -77,6 +77,56 @@ services:
       elasticsearch:
         condition: service_healthy
  
+
+  weather-aggregator:
+    image: weather-aggregator:latest  # Replace with your actual image name
+    container_name: weather-aggregator
+    networks:
+      - elastic
+      - otel
+    depends_on:
+      - elasticsearch
+      - apm-server
+      - otel-collector
+    ports:
+      - "8081:8081"  # Replace with the port your app listens on
+    volumes:
+      - ./opentelemetry-javaagent.jar:/app/opentelemetry-javaagent.jar  # Path to your Java agent
+    environment:
+      - OTEL_EXPORTER_GRPC_OTLP_ENDPOINT=http://otel-collector:4317
+      - OTEL_SERVICE_NAME=weather-aggregator-monitor
+      - OTEL_JAVA_AGENT_PATH=/app/opentelemetry-javaagent.jar
+    entrypoint: >
+      java -javaagent:opentelemetry-javaagent.jar
+      -Dotel.service.name=weather-aggregator-monitor
+      -Dotel.exporter.otlp.endpoint=http://otel-collector:4317
+      -jar weather-aggregator-1.0.0.jar
+ 
+  weather-gateway:
+    image: weather-gateway:latest  # Replace with your actual image name
+    container_name: weather-gateway
+    networks:
+      - elastic
+      - otel
+    depends_on:
+      - elasticsearch
+      - apm-server
+      - otel-collector
+    ports:
+      - "8082:8082"  # Replace with the port your app listens on
+    volumes:
+      - ./opentelemetry-javaagent.jar:/app/opentelemetry-javaagent.jar  # Path to your Java agent
+    environment:
+      - OTEL_EXPORTER_GRPC_OTLP_ENDPOINT=http://otel-collector:4317
+      - OTEL_SERVICE_NAME=weather-gateway-monitor
+      - OTEL_JAVA_AGENT_PATH=/app/opentelemetry-javaagent.jar
+      - WEATHER_AGGREGATOR_HOST=weather-aggregator
+    entrypoint: >
+      java -javaagent:opentelemetry-javaagent.jar
+      -Dotel.service.name=weather-gateway-monitor
+      -Dotel.exporter.otlp.endpoint=http://otel-collector:4317
+      -jar weather-gateway-1.0.0.jar
+
   # We do not need this incase using opentelemetry, as logstash expects json and otel send data in protobuf
   # logstash:
   #  image: docker.elastic.co/logstash/logstash:8.15.0

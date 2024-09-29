@@ -1,3 +1,4 @@
+chmod +x mvnw
 ./mvnw clean install
 
-docker build -t starter .
+sudo docker build -t weather-aggregator .
