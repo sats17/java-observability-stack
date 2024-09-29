@@ -14,28 +14,11 @@ services:
       - es_data:/usr/share/elasticsearch/data
     networks:
       - elastic
-  # We do not need this incase using opentelemetry, as logstash expects json and otel send data in protobuf
-  #logstash:
-   # image: docker.elastic.co/logstash/logstash:8.15.0
-   # container_name: logstash
-   # depends_on:
-    #  - elasticsearch
-    #volumes:
-     # - ./logstash-pipeline:/usr/share/logstash/pipeline
-    #ports:
-     # - "5044:5044"
-      #- "9600:9600" # Logstash HTTP API
-    #environment:
-     # - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    #networks:
-     # - elastic
-      #- otel
-    #healthcheck:
-     # test: ["CMD-SHELL", "curl --fail http://localhost:9600/_node/stats || exit 1"]
-     # interval: 10s
-      #retries: 10
-      #start_period: 40s
-      #timeout: 5s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.15.0
@@ -49,21 +32,34 @@ services:
     networks:
       - elastic
 
-  #otel-collector:
-   # image: otel/opentelemetry-collector:latest
-    #container_name: otel-collector
-    #volumes:
-     # - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
-    #ports:
-     # - "4317:4317" # OTLP gRPC
-      #- "4318:4318" # OTLP HTTP
-    #command: ["--config", "/etc/otel-collector-config.yaml"]
-    #networks:
-     # - otel
-    #depends_on:
-     # logstash:
-      #  condition: service_healthy
-      
+  # If APM Server with docker compose have issue with elastic search network connectivity.
+  # Then use direct docker run command with same network.
+  # sudo docker run -d   --name apm-server-2   --cap-add CHOWN   --cap-add DAC_OVERRIDE   --cap-add SETGID   --cap-add SETUID   --network monitor_infra_elastic   -p 8200:8200   -e ELASTIC_APM_SERVER_URL=http://elasticsearch:9200   -e ELASTIC_APM_KIBANA_URL=http://kibana:5601   -e ELASTIC_APM_RUM_ENABLED=true   docker.elastic.co/apm/apm-server:8.15.0   apm-server -e   -E apm-server.rum.enabled=true   -E setup.kibana.host=http://kibana:5601   -E output.elasticsearch.hosts=["http://elasticsearch:9200"]   -E apm-server.kibana.enabled=true   -E apm-server.kibana.host=http://kibana:5601
+  apm-server:
+   image: docker.elastic.co/apm/apm-server:8.15.0
+   container_name: apm-server
+   cap_add:
+     - CHOWN
+     - DAC_OVERRIDE
+     - SETGID
+     - SETUID
+   networks:
+     - elastic
+   ports:
+     - "8200:8200"
+   environment:
+     - ELASTIC_APM_SERVER_URL=http://elasticsearch:9200
+     - ELASTIC_APM_KIBANA_URL=http://kibana:5601
+     - ELASTIC_APM_RUM_ENABLED=true
+   command: >
+     apm-server -e
+     -E apm-server.rum.enabled=true
+     -E setup.kibana.host=http://kibana:5601
+     -E output.elasticsearch.hosts=["http://elasticsearch:9200"]
+     -E apm-server.kibana.enabled=true
+     -E apm-server.kibana.host=http://kibana:5601
+
+
   otel-collector:
     # Custom OpenTelemetry Collector with Elasticsearch exporter support
     image: otel/opentelemetry-collector-contrib:latest
@@ -77,6 +73,51 @@ services:
     networks:
       - elastic
       - otel
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+ 
+  # We do not need this incase using opentelemetry, as logstash expects json and otel send data in protobuf
+  # logstash:
+  #  image: docker.elastic.co/logstash/logstash:8.15.0
+  #  container_name: logstash
+  #  depends_on:
+  #    - elasticsearch
+  #   volumes:
+  #    - ./logstash-pipeline:/usr/share/logstash/pipeline
+  #   ports:
+  #    - "5044:5044"
+  #     - "9600:9600" # Logstash HTTP API
+  #   environment:
+  #    - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+  #   networks:
+  #    - elastic
+  #     - otel
+  #   healthcheck:
+  #    test: ["CMD-SHELL", "curl --fail http://localhost:9600/_node/stats || exit 1"]
+  #    interval: 10s
+  #     retries: 10
+  #     start_period: 40s
+  #     timeout: 5s
+
+
+  # This otel collector does not support elasticsearch as export, hence using contribute one.
+  # otel-collector:
+  #  image: otel/opentelemetry-collector:latest
+  #   container_name: otel-collector
+  #   volumes:
+  #    - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+  #   ports:
+  #    - "4317:4317" # OTLP gRPC
+  #     - "4318:4318" # OTLP HTTP
+  #   command: ["--config", "/etc/otel-collector-config.yaml"]
+  #   networks:
+  #    - otel
+  #   depends_on:
+  #    logstash:
+  #      condition: service_healthy
+      
+
 
 volumes:
   es_data:

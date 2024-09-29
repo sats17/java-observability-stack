@@ -19,6 +19,11 @@ exporters:
   elasticsearch:
     endpoints: ["http://elasticsearch:9200"]
     index: "otel-ek-logs"  # Change index name as needed
+    
+  otlp:
+    endpoint: "http://apm-server:8200"
+    tls:
+      insecure: true 
 
 
 
@@ -31,9 +36,9 @@ service:
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [elasticsearch]
+      exporters: [otlp]
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [elasticsearch]
+      exporters: [otlp]
 

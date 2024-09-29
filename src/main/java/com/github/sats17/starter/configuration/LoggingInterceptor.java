@@ -18,7 +18,6 @@ public class LoggingInterceptor implements HandlerInterceptor {
                     request.getMethod(), 
                     request.getRequestURI(), 
                     request.getQueryString());
-        logger.info("Hi Sathish:");
         return true;
     }
 
