@@ -18,7 +18,7 @@ import com.github.sats17.starter.service.WeatherService;
 import com.github.sats17.starter.utility.ApiResponseUtility;
 
 @RestController
-@RequestMapping("/api/weather")
+@RequestMapping("/api")
 public class WeatherController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(WeatherController.class);
@@ -26,7 +26,7 @@ public class WeatherController {
 	@Autowired
 	WeatherService weatherService;
 
-	@GetMapping("/forecast")
+	@GetMapping("/weather")
 	public ResponseEntity<FinalResponse> getForecast(@RequestParam("lat") String lat, @RequestParam("lon") String lon) {
 		ResponseEntity<FinalResponse> resp = weatherService.getForecastByLatLon(lat, lon);
 		return resp;

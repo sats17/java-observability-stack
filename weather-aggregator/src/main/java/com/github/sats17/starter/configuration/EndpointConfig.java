@@ -13,8 +13,13 @@ public class EndpointConfig {
 	ConfigProperties configProperties;
 
 	@Bean
-	DownstreamEndpoint weatherHttpConfig() {
-		return new DownstreamEndpoint(configProperties.getWeather(), HttpClient.newHttpClient());
+	DownstreamEndpoint forecastHttpConfig() {
+		return new DownstreamEndpoint(configProperties.getForecast(), HttpClient.newHttpClient());
+	}
+	
+	@Bean
+	DownstreamEndpoint airQualityHttpConfig() {
+		return new DownstreamEndpoint(configProperties.getAirQuality(), HttpClient.newHttpClient());
 	}
 
 }

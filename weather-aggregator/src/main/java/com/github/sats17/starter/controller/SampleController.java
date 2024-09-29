@@ -14,7 +14,7 @@ import com.github.sats17.starter.utility.ApiResponseUtility;
 import com.github.sats17.starter.model.response.Error;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/sampleapi")
 public class SampleController {
 	
 	/*

@@ -1,11 +1,19 @@
 server.port: 8081
 
-weather:
+forecast:
     protocol: "https"
     host: "api.open-meteo.com"
     port: 443
     forecastApiPath: "/v1/forecast"
     timeOutInMillis: "5000"
+airQuality:
+    protocol: "https"
+    host: "air-quality-api.open-meteo.com"
+    port: 443
+    airQualityApiPath: "/v1/air-quality"
+    timeOutInMillis: "5000"
+#		https:///v1/latitude=52.52&longitude=13.41&hourly=pm10,pm2_5"
+
 
 otel:
    service:
