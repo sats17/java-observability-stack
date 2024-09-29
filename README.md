@@ -1,4 +1,4 @@
-# spring-boot-microservice-starter-monitor
+# spring-boot-starter-monitor
 
 Monitor project contains how we can instrument our spring boot application so that it can show logs, metrics and traces.
 
