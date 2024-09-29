@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{ISO8601} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <OpenTelemetry name="OpenTelemetryAppender">
+            <PatternLayout pattern="%d{ISO8601} [%t] %-5level %logger{36} - %msg%n"/>
+        </OpenTelemetry>
+    </Appenders>
+    <Loggers>
+        <!-- Root logger -->
+        <Root level="info">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="OpenTelemetryAppender"/>
+        </Root>
+
+        <!-- Specific package logger (optional) -->
+        <Logger name="com.github" level="debug" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="OpenTelemetryAppender"/>
+        </Logger>
+    </Loggers>
+</Configuration>

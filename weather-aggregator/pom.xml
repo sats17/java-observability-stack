@@ -10,10 +10,10 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.github.sats17</groupId>
-	<artifactId>spring-boot-ms-starter-monitor</artifactId>
+	<artifactId>weather-aggregator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>rest-api-starter</name>
-	<description>Starter project for building quick microservice</description>
+	<description>Weather aggregator service</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>

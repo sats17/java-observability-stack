@@ -9,7 +9,7 @@ weather:
 
 otel:
    service:
-      name: spring-boot-starter-monitor
+      name: weather-aggregator-monitor
    exporter:
       otlp:
         endpoint: http://localhost:4317
