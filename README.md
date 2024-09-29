@@ -9,3 +9,32 @@ This project demonstrates how to integrate OpenTelemetry with a Spring Boot appl
 <a href="https://github.com/sats17/spring-boot-microservice-starter-monitor">
 <img align="left" height="100px" src="https://github.com/sats17/spring-boot-microservice-starter-monitor/blob/main/files/app-info.png">
 </a>
+
+
+<br clear="left"/>
+
+
+## Project structure 
+
+```
+├── monitor_infra
+│   ├── docker-compose.yml
+│   ├── opentelemetry-javaagent.jar
+│   └── otel-collector-config.yaml
+├── weather-aggregator
+│   ├── ci.sh
+│   ├── Dockerfile
+│   ├── mvnw
+│   ├── mvnw.cmd
+│   ├── pom.xml
+│   ├── src
+└── weather-gateway
+    ├── ci.sh
+    ├── Dockerfile
+    ├── mvnw
+    ├── mvnw.cmd
+    ├── opentelemetry-javaagent.jar
+    ├── pom.xml
+    ├── src
+
+```
