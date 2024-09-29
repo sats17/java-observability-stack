@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sats17.starter.configuration.DownstreamEndpoint;
 import com.github.sats17.starter.model.response.Error;
 import com.github.sats17.starter.model.response.FinalResponse;
@@ -22,17 +24,20 @@ public class WeatherService {
 	@Autowired
 	DownstreamEndpoint weatherHttpConfig;
 
+	private final ObjectMapper objectMapper = new ObjectMapper();
+	
 	public ResponseEntity<FinalResponse> getForecastByLatLon(String lat, String lon) {
 		Map<String, String> properties = weatherHttpConfig.getConfigProperties();
 		String baseUrl = properties.get("protocol") + "://" + properties.get("host") + ":" + properties.get("port")
 				+ properties.get("forecastApiPath");
 		Map<String, String> queryParams = new HashMap<>();
-		queryParams.put("latitude", lat);
-		queryParams.put("longitude", lon);
+		queryParams.put("lat", lat);
+		queryParams.put("lon", lon);
 		try {
 			HttpResponse<String> resp = weatherHttpConfig.get(baseUrl, null, queryParams,
 					Duration.ofMillis(Long.parseLong(properties.get("timeOutInMillis"))));
-			return ApiResponseUtility.successResponseCreator(resp.body(), "OK");
+			JsonNode jsonResp = objectMapper.readTree(resp.body());
+			return ApiResponseUtility.successResponseCreator(jsonResp.get("response"), "OK");
 		} catch (NumberFormatException e) {
 			List<Error> errors = new ArrayList<>();
 			Error error = new Error();

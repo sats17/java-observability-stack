@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import com.github.sats17.starter.model.response.FinalResponse;
 import com.github.sats17.starter.model.response.SampleSuccess;
 import com.github.sats17.starter.model.response.Status;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.sats17.starter.model.response.Error;
 
 /**
@@ -32,12 +33,12 @@ public class ApiResponseUtility {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public static ResponseEntity<FinalResponse> successResponseCreator(String body, String message) {
+	public static ResponseEntity<FinalResponse> successResponseCreator(JsonNode body, String message) {
 		Status status = new Status();
 		status.setRootCode(20000);
 		status.setRootType("Success");
 	
-		FinalResponse<String> finalResponse = new FinalResponse<>();
+		FinalResponse<JsonNode> finalResponse = new FinalResponse<>();
 		finalResponse.setStatus(status);
 		finalResponse.setResponse(body);
 		ResponseEntity<FinalResponse> successResponse = new ResponseEntity<>(

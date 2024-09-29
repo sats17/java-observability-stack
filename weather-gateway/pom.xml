@@ -10,10 +10,10 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.github.sats17</groupId>
-	<artifactId>weather-aggregator</artifactId>
+	<artifactId>weather-gateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>rest-api-starter</name>
-	<description>Weather aggregator service</description>
+	<description>Weather gateway service</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
