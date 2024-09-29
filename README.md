@@ -1,3 +1,7 @@
-# spring-boot-microservice-starter
-This project I have created for myself to create Spring boot microservice that contains these response handles by default.
-There is still manual work needs to be done here according to your need like changing packaging names and updating response utilities.
+# spring-boot-microservice-starter-monitor
+
+Monitor project contains how we can instrument our spring boot application so that it can show logs, metrics and traces.
+
+<a href="https://github.com/sats17/cache-bucket">
+<img align="right" height="100px" src="https://github.com/sats17/spring-boot-microservice-starter-monitor/blob/master/files/app-info.png">
+</a>
