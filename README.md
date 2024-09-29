@@ -44,3 +44,6 @@ This project demonstrates how to integrate OpenTelemetry with a Spring Boot appl
 - Docker Compose
 - Java 11+
 - Maven (Optional)
+
+> **Note:** This project uses opentelemetry collectors and agent, so we can integrate them with any stack such as Elasticsearch/Kibana or Prometheus/Grafana 
+
