@@ -1,6 +1,8 @@
-# spring-boot-starter-monitor
+# spring-boot-observability-stack
 
-This project demonstrates how to integrate OpenTelemetry with a Spring Boot application to collect and send logs, traces, and metrics to Elasticsearch, Kibana, and Elastic APM. The project consists of:
+This project demonstrates how to integrate OpenTelemetry with a Spring Boot application to collect and send logs, traces, and metrics to Elasticsearch, Kibana, and Elastic APM. 
+The project consists of the following components:
+
 
     Weather Gateway: Handles incoming requests and routes them to the weather aggregator service.
     Weather Aggregator: Aggregate weather information from third party weather API and return consolidated response.
