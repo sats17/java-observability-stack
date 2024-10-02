@@ -14,17 +14,10 @@ services:
       - es_data:/usr/share/elasticsearch/data
     networks:
       - elastic
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9200"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.15.0
     container_name: kibana
-    depends_on:
-      - elasticsearch
     ports:
       - "5601:5601"
     environment:
@@ -73,59 +66,56 @@ services:
     networks:
       - elastic
       - otel
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
  
 
-  weather-aggregator:
-    image: weather-aggregator:latest  # Replace with your actual image name
-    container_name: weather-aggregator
-    networks:
-      - elastic
-      - otel
-    depends_on:
-      - elasticsearch
-      - apm-server
-      - otel-collector
-    ports:
-      - "8081:8081"  # Replace with the port your app listens on
-    volumes:
-      - ./opentelemetry-javaagent.jar:/app/opentelemetry-javaagent.jar  # Path to your Java agent
-    environment:
-      - OTEL_EXPORTER_GRPC_OTLP_ENDPOINT=http://otel-collector:4317
-      - OTEL_SERVICE_NAME=weather-aggregator-monitor
-      - OTEL_JAVA_AGENT_PATH=/app/opentelemetry-javaagent.jar
-    entrypoint: >
-      java -javaagent:opentelemetry-javaagent.jar
-      -Dotel.service.name=weather-aggregator-monitor
-      -Dotel.exporter.otlp.endpoint=http://otel-collector:4317
-      -jar weather-aggregator-1.0.0.jar
+  # weather-aggregator:
+  #   image: weather-aggregator:latest  # Replace with your actual image name
+  #   container_name: weather-aggregator
+  #   networks:
+  #     - elastic
+  #     - otel
+  #   depends_on:
+  #     - elasticsearch
+  #     - apm-server
+  #     - otel-collector
+  #   ports:
+  #     - "8081:8081"  # Replace with the port your app listens on
+  #   volumes:
+  #     - ./opentelemetry-javaagent.jar:/app/opentelemetry-javaagent.jar  # Path to your Java agent
+  #   environment:
+  #     - OTEL_EXPORTER_GRPC_OTLP_ENDPOINT=http://otel-collector:4317
+  #     - OTEL_SERVICE_NAME=weather-aggregator-monitor
+  #     - OTEL_JAVA_AGENT_PATH=/app/opentelemetry-javaagent.jar
+  #   entrypoint: >
+  #     java -javaagent:opentelemetry-javaagent.jar
+  #     -Dotel.service.name=weather-aggregator-monitor
+  #     -Dotel.exporter.otlp.endpoint=http://otel-collector:4317
+  #     -jar weather-aggregator-1.0.0.jar
  
-  weather-gateway:
-    image: weather-gateway:latest  # Replace with your actual image name
-    container_name: weather-gateway
-    networks:
-      - elastic
-      - otel
-    depends_on:
-      - elasticsearch
-      - apm-server
-      - otel-collector
-    ports:
-      - "8082:8082"  # Replace with the port your app listens on
-    volumes:
-      - ./opentelemetry-javaagent.jar:/app/opentelemetry-javaagent.jar  # Path to your Java agent
-    environment:
-      - OTEL_EXPORTER_GRPC_OTLP_ENDPOINT=http://otel-collector:4317
-      - OTEL_SERVICE_NAME=weather-gateway-monitor
-      - OTEL_JAVA_AGENT_PATH=/app/opentelemetry-javaagent.jar
-      - WEATHER_AGGREGATOR_HOST=weather-aggregator
-    entrypoint: >
-      java -javaagent:opentelemetry-javaagent.jar
-      -Dotel.service.name=weather-gateway-monitor
-      -Dotel.exporter.otlp.endpoint=http://otel-collector:4317
-      -jar weather-gateway-1.0.0.jar
+  # weather-gateway:
+  #   image: weather-gateway:latest  # Replace with your actual image name
+  #   container_name: weather-gateway
+  #   networks:
+  #     - elastic
+  #     - otel
+  #   depends_on:
+  #     - elasticsearch
+  #     - apm-server
+  #     - otel-collector
+  #   ports:
+  #     - "8082:8082"  # Replace with the port your app listens on
+  #   volumes:
+  #     - ./opentelemetry-javaagent.jar:/app/opentelemetry-javaagent.jar  # Path to your Java agent
+  #   environment:
+  #     - OTEL_EXPORTER_GRPC_OTLP_ENDPOINT=http://otel-collector:4317
+  #     - OTEL_SERVICE_NAME=weather-gateway-monitor
+  #     - OTEL_JAVA_AGENT_PATH=/app/opentelemetry-javaagent.jar
+  #     - WEATHER_AGGREGATOR_HOST=weather-aggregator
+  #   entrypoint: >
+  #     java -javaagent:opentelemetry-javaagent.jar
+  #     -Dotel.service.name=weather-gateway-monitor
+  #     -Dotel.exporter.otlp.endpoint=http://otel-collector:4317
+  #     -jar weather-gateway-1.0.0.jar
 
   # We do not need this incase using opentelemetry, as logstash expects json and otel send data in protobuf
   # logstash:
